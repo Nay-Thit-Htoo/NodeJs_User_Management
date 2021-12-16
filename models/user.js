@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 const mongoose = require('mongoose');
+const { roleSchema } = require('../models/role');
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -16,13 +17,26 @@ const userSchema = new mongoose.Schema({
         maxlength: 255,
         unique: true
     },
+
     password: {
         type: String,
         required: true,
         minlength: 5,
         maxlength: 1024
     },
-    isAdmin: Boolean
+    isAdmin: {
+        type: Boolean,
+        required: true,
+    },
+    insertedDate: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
+    role: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Role"
+    },
 });
 
 userSchema.methods.generateAuthToken = function () {
@@ -36,7 +50,8 @@ function validateUser(user) {
     const schema = Joi.object({
         name: Joi.string().min(5).max(50).required(),
         email: Joi.string().min(5).max(255).required().email(),
-        password: Joi.string().min(5).max(255).required()
+        password: Joi.string().min(5).max(255).required(),
+        isAdmin: Joi.boolean().required()
     });
 
     return schema.validate(user);
