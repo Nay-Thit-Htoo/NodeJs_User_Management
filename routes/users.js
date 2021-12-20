@@ -16,7 +16,7 @@ router.get('/', [auth, admin], async (req, res) => {
 
 
     const token = new User().generateAuthToken();
-    res.header('x-auth-token', token).send(await User.find().populate('role').select().exec());
+    res.header('x-auth-token', token).send(await User.find().populate('role').select('-__v').exec());
     //res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email', 'isAdmin']));
 });
 
@@ -25,7 +25,7 @@ router.get('/', [auth, admin], async (req, res) => {
 //get user data by id
 router.get('/:id', [auth, validateObjectId], async (req, res) => {
     //const user = await User.findById(req.params.id).select(); for single collection
-    const user = await User.findById(req.params.id).populate('role').select().exec();//for reference collections
+    const user = await User.findById(req.params.id).populate('role').select('-__v').exec();//for reference collections
     res.send(user);
 });
 
@@ -56,7 +56,7 @@ router.post('/', async (req, res) => {
     user.role = role_obj._id;
     await user.save();
     const token = user.generateAuthToken();
-    res.header('x-auth-token', token).send(await User.findById(user._id).populate('role').select().exec());
+    res.header('x-auth-token', token).send(await User.findById(user._id).populate('role').select('-__v').exec());
 });
 
 

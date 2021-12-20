@@ -32,7 +32,7 @@ router.get('/', auth, async (req, res) => {
 
 //get each role data by id
 router.get('/:id', [auth, validateObjectId], async (req, res) => {
-    res.send(await Role.findById(req.params.id).select().exec());
+    res.send(await Role.findById(req.params.id).select('-__v').exec());
 });
 
 
@@ -44,7 +44,7 @@ router.post('/', [auth, admin], async (req, res) => {
     }
     role_obj = await insertNewRole(role_obj);
     if (!role_obj) return res.status(400).send('Need User Role Object');
-    res.send(await Role.find().select().exec());
+    res.send(await Role.find().select('-__v').exec());
 });
 
 
