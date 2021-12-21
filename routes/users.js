@@ -101,7 +101,7 @@ router.put('/:id', [auth, validateObjectId], async (req, res) => {
 
 
 
-router.post('/login', auth, async (req, res) => {
+router.get('/login', auth, async (req, res) => {
     // let user = await User.find({ name: req.body.name, email: req.body.email });
     // bcrypt.hash(req.body.password, 10, function (err, hash) {
     //     bcrypt.compare(user.password, hash, function (err, res) {
