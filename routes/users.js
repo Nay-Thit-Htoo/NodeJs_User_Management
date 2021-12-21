@@ -101,4 +101,20 @@ router.put('/:id', [auth, validateObjectId], async (req, res) => {
 
 
 
+router.post('/login', auth, async (req, res) => {
+    let user = await User.find({ name: req.body.name, email: req.body.email });
+    bcrypt.hash(req.body.password, 10, function (err, hash) {
+        bcrypt.compare(user.password, hash, function (err, res) {
+            if (res) {
+                return res.status(200).send({ message: "User succesfully Login" });
+            } else {
+                return res.status(400).send({ message: "User Login Failed" });
+            }
+        });
+    })
+});
+
+
+
+
 module.exports = router; 
