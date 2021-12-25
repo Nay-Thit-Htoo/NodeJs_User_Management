@@ -10,6 +10,19 @@ const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
 
+//login user
+router.get('/login', auth, async (req, res) => {
+
+    let user = await User.findOne({ name: req.body.name, email: req.body.email });
+    if (!user) return res.status(400).send("User Not Found");
+    bcrypt.compare(req.body.password, user.password, function (err, result) {
+        if (result)
+            return res.status(200).send("User succesfully Login");
+        else
+            return res.status(400).send("User Login Failed!");
+    });
+
+});
 
 //get all user's data
 router.get('/', [auth, admin], async (req, res) => {
@@ -101,19 +114,7 @@ router.put('/:id', [auth, validateObjectId], async (req, res) => {
 
 
 
-router.get('/login', auth, async (req, res) => {
-    // let user = await User.find({ name: req.body.name, email: req.body.email });
-    // bcrypt.hash(req.body.password, 10, function (err, hash) {
-    //     bcrypt.compare(user.password, hash, function (err, res) {
-    //         if (res) {
-    //             return res.status(200).send({ message: "User succesfully Login" });
-    //         } else {
-    //             return res.status(400).send({ message: "User Login Failed" });
-    //         }
-    //     });
-    // })
-    return res.status(200).send({ message: "User succesfully Login" });
-});
+
 
 
 
