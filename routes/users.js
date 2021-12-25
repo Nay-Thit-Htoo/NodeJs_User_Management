@@ -11,7 +11,7 @@ const express = require('express');
 const router = express.Router();
 
 //login user
-router.get('/login', auth, async (req, res) => {
+router.post('/login', auth, async (req, res) => {
 
     let user = await User.findOne({ email: req.body.email });
     if (!user) return res.status(400).send("User Not Found");
