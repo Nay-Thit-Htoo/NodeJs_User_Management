@@ -13,7 +13,7 @@ const router = express.Router();
 //login user
 router.get('/login', auth, async (req, res) => {
 
-    let user = await User.findOne({ name: req.body.name, email: req.body.email });
+    let user = await User.findOne({ email: req.body.email });
     if (!user) return res.status(400).send("User Not Found");
     bcrypt.compare(req.body.password, user.password, function (err, result) {
         if (result)
