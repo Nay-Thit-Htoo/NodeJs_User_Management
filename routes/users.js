@@ -25,7 +25,7 @@ router.post('/login', auth, async (req, res) => {
 });
 
 //get all user's data
-router.post('/', [auth, admin], async (req, res) => {
+router.post('/getUserData', [auth, admin], async (req, res) => {
 
 
     const token = new User().generateAuthToken();
