@@ -27,7 +27,6 @@ router.post('/login', auth, async (req, res) => {
 //get all user's data
 router.post('/getUserData', [auth, admin], async (req, res) => {
 
-
     const token = new User().generateAuthToken();
     res.header('x-auth-token', token).send(await User.find().populate('role').select('-__v').exec());
     //res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email', 'isAdmin']));
