@@ -82,7 +82,9 @@ router.delete('/:id', [auth, admin, validateObjectId], async (req, res) => {
     const user = await User.findByIdAndRemove(req.params.id);
     if (!user) return res.status(404).send('The user with the given ID was not found.');
 
-    res.send(user);
+    const token = new User().generateAuthToken();
+    return res.header('x-auth-token', token).send(await User.find().populate('role').select('-__v').exec());
+
 });
 
 //update user data by user id
