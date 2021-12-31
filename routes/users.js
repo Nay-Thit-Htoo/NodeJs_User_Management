@@ -15,9 +15,13 @@ router.post('/login', auth, async (req, res) => {
 
     let user = await User.findOne({ email: req.body.email });
     if (!user) return res.status(400).send("User Not Found");
-    bcrypt.compare(req.body.password, user.password, async (err, result) => {
+
+    let pop_user = await User.findOne({ email: req.body.email }).populate('role').select('-__v').exec();
+
+
+    bcrypt.compare(req.body.password, user.password, (err, result) => {
         if (result) {
-            return await User.findOne({ email: req.body.email }).populate('role').select('-__v').exec();
+            return res.status(200).send(pop_user);
         }
         else
             return res.status(400).send("User Login Failed!");
