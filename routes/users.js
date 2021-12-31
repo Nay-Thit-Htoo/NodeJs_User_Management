@@ -11,7 +11,7 @@ const express = require('express');
 const router = express.Router();
 
 //login user
-router.post('/login', auth, async (req, res) => {
+router.post('/login', async (req, res) => {
 
     let user = await User.findOne({ email: req.body.email });
     if (!user) return res.status(400).send("User Not Found");
@@ -21,7 +21,8 @@ router.post('/login', auth, async (req, res) => {
 
     bcrypt.compare(req.body.password, user.password, (err, result) => {
         if (result) {
-            return res.status(200).send(pop_user);
+            const token = user.generateAuthToken();
+            return res.header('x-auth-token', token).send(pop_user);
         }
         else
             return res.status(400).send("User Login Failed!");
