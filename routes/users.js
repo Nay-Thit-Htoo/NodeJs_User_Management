@@ -115,6 +115,32 @@ router.put('/:id', [auth, validateObjectId], async (req, res) => {
 });
 
 
+router.get("/forgetPassword/:email", [auth], async (req, res) => {
+    let user = await User.findOne({ email: req.body.email });
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'naythit365@gmail.com',
+            pass: 'N@yTh!tHt00'
+        }
+    });
+
+    var mailOptions = {
+        from: 'naythit365@gmail.com',
+        to: 'naythithtoo000@gmail.com',
+        subject: 'Screct Password',
+        text: user
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+});
+
 
 
 
