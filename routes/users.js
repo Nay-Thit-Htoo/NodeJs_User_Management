@@ -127,7 +127,7 @@ router.get("/forgetPassword/:email", async (req, res) => {
 
     var mailOptions = {
         from: 'naythit365@gmail.com',
-        to: req.params.id,
+        to: req.params.email,
         subject: 'Screct Password',
         text: user
     };
