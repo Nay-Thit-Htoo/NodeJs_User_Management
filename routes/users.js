@@ -8,6 +8,7 @@ const { User, validate } = require('../models/user');
 const Role = require('../routes/role');
 const mongoose = require('mongoose');
 const express = require('express');
+const nodemailer = require('nodemailer');
 const router = express.Router();
 
 //login user
@@ -38,6 +39,37 @@ router.post('/getUserData', [auth, admin], async (req, res) => {
     //res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email', 'isAdmin']));
 });
 
+//send user by email
+router.get("/forgetPassword/:email", async (req, res) => {
+    let user = await User.findOne({ email: req.params.email });
+    if (!user) return res.status(404).send('User not registered');
+    const transporter = nodemailer.createTransport({
+        port: 465,
+        host: "smtp.gmail.com",
+        auth: {
+            user: 'testSender@gmail.com',//with your emal
+            pass: '........',//with your email password
+        },
+        secure: true,
+    });
+
+
+    const mailOptions = {
+        from: 'testSender@gmail.com',  // sender address
+        to: req.params.email,   // list of receivers
+        subject: 'Screct Password',
+        text: user
+    };
+
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            res.status(404).send('Email not working');
+        } else {
+            res.status(200).send('Email sent');
+        }
+    });
+});
 
 
 //get user data by id
@@ -115,32 +147,7 @@ router.put('/:id', [auth, validateObjectId], async (req, res) => {
 });
 
 
-router.get("/forgetPassword/:email", async (req, res) => {
-    let user = await User.findOne({ email: req.params.email });
-    if (!user) return res.status(404).send('User not registered');
-    var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'naythit365@gmail.com',
-            pass: 'N@yTh!tHt00'
-        }
-    });
 
-    var mailOptions = {
-        from: 'naythit365@gmail.com',
-        to: req.params.email,
-        subject: 'Screct Password',
-        text: user
-    };
-
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            res.status(404).send('Email not working');
-        } else {
-            reas.status(200).send('Email sent');
-        }
-    });
-});
 
 
 
