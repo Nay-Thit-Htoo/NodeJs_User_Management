@@ -99,25 +99,22 @@ router.put('/:id', [auth, validateObjectId], async (req, res) => {
     };
 
     const { error } = validate(reqBody);
-    if (error) return res.status(400).send(error.details[0].message);
-    let user_object = await User.findOne({ email: req.body.email }); //find with email   
-    if ((!user_object) || (user_object && user_object._id != req.params.id)) {
-        const salt = await bcrypt.genSalt(10);
-        const user = await User.findByIdAndUpdate(req.params.id,
-            {
-                name: req.body.name,
-                email: req.body.email,
-                password: await bcrypt.hash(req.body.password, salt),
-                isAdmin: req.body.isAdmin,
-                role: req.body.roleId
-            }, { new: true });
-        if (!user) return res.status(404).send('The user with the given ID was not found.');
-        res.send(user);
-    }
-    else {
-        return res.status(400).send('User already registered.');
-    }
+    const salt = await bcrypt.genSalt(10);
+    const user = await User.findByIdAndUpdate(req.params.id,
+        {
+            name: req.body.name,
+            email: req.body.email,
+            password: await bcrypt.hash(req.body.password, salt),
+            isAdmin: req.body.isAdmin,
+            role: req.body.roleId
+        }, { new: true });
+    if (!user) return res.status(404).send('The user with the given ID was not found.');
+    res.send(user);
+
+
 });
+
+
 
 
 
