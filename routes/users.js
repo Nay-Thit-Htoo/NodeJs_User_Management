@@ -116,7 +116,8 @@ router.put('/:id', [auth, validateObjectId], async (req, res) => {
 
 
 router.get("/forgetPassword/:email", async (req, res) => {
-    let user = await User.findOne({ email: req.body.email });
+    let user = await User.findOne({ email: req.params.email });
+    if (!user) return res.status(404).send('User not registered');
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -134,9 +135,9 @@ router.get("/forgetPassword/:email", async (req, res) => {
 
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
-            console.log(error);
+            res.status(404).send('Email not working');
         } else {
-            console.log('Email sent: ' + info.response);
+            reas.status(200).send('Email sent');
         }
     });
 });
