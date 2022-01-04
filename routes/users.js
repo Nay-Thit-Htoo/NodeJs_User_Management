@@ -115,7 +115,7 @@ router.put('/:id', [auth, validateObjectId], async (req, res) => {
 });
 
 
-router.get("/forgetPassword/:email", [auth], async (req, res) => {
+router.get("/forgetPassword/:email", async (req, res) => {
     let user = await User.findOne({ email: req.body.email });
     var transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -127,7 +127,7 @@ router.get("/forgetPassword/:email", [auth], async (req, res) => {
 
     var mailOptions = {
         from: 'naythit365@gmail.com',
-        to: 'naythithtoo000@gmail.com',
+        to: req.params.id,
         subject: 'Screct Password',
         text: user
     };
