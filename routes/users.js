@@ -79,7 +79,7 @@ router.post('/', async (req, res) => {
 
 
 //delete user data by userid
-router.post('/DeleteUser/:id', [auth, admin, validateObjectId], async (req, res) => {
+router.post('/deleteUser/:id', [auth, admin, validateObjectId], async (req, res) => {
     const user = await User.findByIdAndRemove(req.params.id);
     if (!user) return res.status(404).send('The user with the given ID was not found.');
 
